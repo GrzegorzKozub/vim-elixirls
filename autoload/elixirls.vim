@@ -8,7 +8,7 @@ endif
 let s:repo = expand('<sfile>:p:h:h') . '/elixir-ls'
 if exists('s:job_id') | unlet s:job_id | endif
 
-function! elixirls#compile() abort
+function! elixirls#compile(wait) abort
   if exists('s:job_id')
     echomsg 'ElixirLS is already currently compiling in the background'
     return
@@ -18,6 +18,7 @@ function! elixirls#compile() abort
   let s:job_id = job_start(l:command, { 'cwd': s:repo, 'exit_cb': function('s:exit_cb') })
   if job_status(s:job_id) ==# 'run'
     echomsg 'ElixirLS compilation started'
+    while a:wait && exists('s:job_id') && job_status(s:job_id) ==# 'run' | sleep 1000m | endwhile
   else
     echoerr 'ElixirLS compilation failed to start'
     unlet s:job_id
