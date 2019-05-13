@@ -1,5 +1,10 @@
 if exists('g:vim_elixirls_loaded') | finish | endif
 
+if !(&rtp =~ 'async.vim')
+  echoerr 'The vim-elixirls plugin requires Neovim or Vim 8 with the async.vim plugin'
+  finish
+endif
+
 let s:repo = expand('<sfile>:p:h:h') . '/elixir-ls'
 if exists('s:job_id') | unlet s:job_id | endif
 
