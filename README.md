@@ -1,6 +1,6 @@
 # What is it
 
-Vim plugin that integrates [elixir-ls](https://github.com/JakeBecker/elixir-ls) with Vim through [ALE](https://github.com/w0rp/ale). It will download and compile [elixir-ls](https://github.com/JakeBecker/elixir-ls) upon installation. I also provided Vim configuration instructions for integrating with [ALE](https://github.com/w0rp/ale) and a command for on-demand compilation.
+Vim and Neovim plugin that integrates [elixir-ls](https://github.com/JakeBecker/elixir-ls) with Vim through [ALE](https://github.com/w0rp/ale). It will download and compile [elixir-ls](https://github.com/JakeBecker/elixir-ls) upon installation. I also provided configuration instructions for integrating with [ALE](https://github.com/w0rp/ale) and a command for on-demand compilation.
 
 # How to install
 
@@ -17,8 +17,13 @@ Note that we're using [post-update hooks](https://github.com/junegunn/vim-plug#p
 At the minimum, you will need to tell [ALE](https://github.com/w0rp/ale) where the compiled [elixir-ls](https://github.com/JakeBecker/elixir-ls) sits and enable it as linter:
 
 ```
-let s:user_dir = has('win32') ? expand('~/vimfiles/') : expand('~/.vim/')
-let g:ale_elixir_elixir_ls_release = s:user_dir . 'plugins/vim-elixirls/elixir-ls/release'
+if has('nvim')
+  let s:user_dir = stdpath('config')
+else
+  let s:user_dir = has('win32') ? expand('~/vimfiles') : expand('~/.vim')
+endif
+
+let g:ale_elixir_elixir_ls_release = s:user_dir . '/plugins/vim-elixirls/elixir-ls/release'
 
 " https://github.com/JakeBecker/elixir-ls/issues/54
 let g:ale_elixir_elixir_ls_config = { 'elixirLS': { 'dialyzerEnabled': v:false } }
@@ -30,9 +35,8 @@ let g:ale_linters.elixir = [ 'credo', 'elixir-ls' ]
 I'm using the following Vim key mappings for quick code navigation:
 
 ```
-nnoremap <C-]> :ALEGoToDefinition<CR>
-nnoremap <C-\> :ALEFindReferences<CR>
-nnoremap <Leader>d :ALEHover<CR>
+autocmd FileType elixir,eelixir nnoremap <C-]> :ALEGoToDefinition<CR>
+autocmd FileType elixir,eelixir nnoremap <C-\> :ALEFindReferences<CR>
 ```
 
 I'm using `mix format` to format my [elixir](https://elixir-lang.org/) code with this config: 
@@ -41,9 +45,7 @@ I'm using `mix format` to format my [elixir](https://elixir-lang.org/) code with
 let g:ale_fixers = {}
 let g:ale_fixers.elixir = [ 'mix_format' ]
 
-augroup UseALEToFormatElixirFiles
-  autocmd FileType elixir,eelixir nnoremap <Leader>f :ALEFix<CR>
-augroup END
+autocmd FileType elixir,eelixir nnoremap <Leader>f :ALEFix<CR>
 ```
 
 The `:ALEInfo` command is useful for figuring out why things are not working.
