@@ -105,12 +105,20 @@ function! s:handle_exit(exit_code) abort
 endfunction
 
 function! s:get_command() abort
+  if exists('g:vim_elixir_ls_elixir_ls_dir')
+    let l:change_dir = 'cd ' . g:vim_elixir_ls_elixir_ls_dir
+  else
+    let l:change_dir = ''
+  endif
+
   let l:commands = [
+    \ l:change_dir,
     \ 'mix deps.get > mix-deps.log 2>&1',
     \ 'mix compile > mix-compile.log 2>&1',
     \ 'mix elixir_ls.release -o release > mix-release.log 2>&1',
     \ 'rm *.log'
   \ ]
+
   let l:script = join(commands, ' && ')
   return has('win32') ? 'cmd /c ' . l:script : [ '/bin/sh', '-c', l:script ]
 endfunction
