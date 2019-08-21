@@ -39,6 +39,11 @@ autocmd FileType elixir,eelixir nnoremap <C-]> :ALEGoToDefinition<CR>
 autocmd FileType elixir,eelixir nnoremap <C-\> :ALEFindReferences<CR>
 ```
 
+You can use a version of elixir-ls other than the one that comes with this
+plugin by setting `g:vim_elixir_ls_elixir_ls_dir` to the path to your elixir-ls
+repo. Make sure to also set `g:ale_elixir_elixir_ls_release` as mentioned
+above.
+
 I'm using `mix format` to format my [elixir](https://elixir-lang.org/) code with this config: 
 
 ```
